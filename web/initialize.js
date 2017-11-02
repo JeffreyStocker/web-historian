@@ -12,6 +12,7 @@ module.exports = function (basePath) {
   if (!fs.existsSync(basePath + '/sites.txt')) {
     // We use fs.openSync to create the file
     var file = fs.openSync(basePath + '/sites.txt', 'w');
+    fs.write(file, JSON.stringify({}));
     fs.closeSync(file);
   }
 
