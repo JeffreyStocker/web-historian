@@ -23,7 +23,7 @@ var test = require('../helpers/archive-helpers.js');
 //   test.isUrlInList('testing.com', (status) => (console.log ('status:', status)));
 // });
 // test.isUrlInList('example12.com', (status) => (console.log (status)));
-test.downloadUrls();
+// test.downloadUrls();
 
 
 /////////// original ///////////

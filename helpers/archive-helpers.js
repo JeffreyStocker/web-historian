@@ -109,7 +109,7 @@ exports.downloadUrls = function(urls = ['one']) {
   //done magically!
   for (var i = 0; i < urls.length; i++ ) {
     var currentUrl = urls[i];
-    currentUrl = 'www.google.com';
+    // currentUrl = 'www.google.com';
     https.get({host: currentUrl}, function (res) {
       // res.setEncoding('utf8');
       // console.log ('test');
@@ -118,8 +118,7 @@ exports.downloadUrls = function(urls = ['one']) {
         body += data;
         // console.log ('adding to body');
       });
-      res.on('end', function () {
-        // console.log(body);        
+      res.on('end', function () {        
         //write body to => 'exports.paths.archivedSites/' + currentUrl
 
         fs.open(exports.paths.archivedSites + '/' + currentUrl, 'w', function (err, fd) {
