@@ -18,7 +18,13 @@ if (module.parent) {
 }
 
 var test = require('../helpers/archive-helpers.js');
-test.readListOfUrls();
+// test.addUrlToList('testing.com', function() {
+//   console.log("in callback");
+//   test.isUrlInList('testing.com', (status) => (console.log ('status:', status)));
+// });
+// test.isUrlInList('example12.com', (status) => (console.log (status)));
+test.downloadUrls();
+
 
 /////////// original ///////////
 // var http = require('http');
