@@ -8,7 +8,17 @@ initialize('./archives');
 
 var port = 8080;
 var ip = '127.0.0.1';
-var server = http.createServer(handler.handleRequest);
+var server = http.createServer(function(req, res) {
+  if (req.url === '/') {
+    //first time loading the website, load the index.html
+    
+  } else {
+    //it's a post/get request from the client
+    handler.handleRequest(req, res);
+
+  }
+
+});
 
 if (module.parent) {
   module.exports = server;

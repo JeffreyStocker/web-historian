@@ -2,13 +2,14 @@ var path = require('path');
 var archive = require('../helpers/archive-helpers');
 var fs = require('fs');
 var helpers = require('./http-helpers.js');
+var urlModule = require ('url');
 
 // require more modules/folders here!
 
 exports.handleRequest = function (req, res) {
   console.info ('------------Request Start----------');
-  //var filePath = __dirname + '/public' + req.url;
-  var filePath = archive.paths.siteAssets + '/' + req.url;
+  var filePath = __dirname + '/public' + req.url;
+  // var filePath = archive.paths.siteAssets + req.url;
 
   // if (req.url === '/') {
   //   console.log ('/');
@@ -34,14 +35,13 @@ exports.handleRequest = function (req, res) {
       try {
         body = JSON.parse(body);
         console.log ('JSON body', body);
-      } catch (error) {
-      }
+      } catch (error) { console.log('Error with JSON parsing'); } 
+
       var url = body.slice(body.indexOf('=') + 1);
-      // console.log ('url', url);
+
       archive.isUrlArchived(url, function(isArchived) {
-        // console.log (isArchived);
-        if (isArchived === false) {
-          //show loading page,
+        console.log('URL:', url);
+        if (isArchived === false) { //show loading page,
           filePath = __dirname + '/public/loading.html';
           exports.readHTMLFiles(filePath, function (data) {
             res.writeHead(201, helpers.headers);
@@ -49,33 +49,38 @@ exports.handleRequest = function (req, res) {
             res.end();
           });
           //write the url to the sites.txt file...
-          archive.addUrlToList(url, function() {
-            console.log('added URL to sites.txt');
+          archive.addUrlToList(url, function(error, isSuccess) {
+            console.log('Adding URL to sites.txt, Success:', isSuccess);
           });
-
-          //NOTE: at some time htmlfetcher will download all the urls
-        } else {
-          //if it is archived,
-          console.log('archived?????');
+        } else if (isArchived === true) {
+          console.log('Archive Found');
           exports.readHTMLFiles(archive.paths.archivedSites + '/' + url, function(data) {
-            res.writeHead(201, helpers.headers);
+            res.writeHead(302, helpers.headers);
             res.write(data);
             res.end();
           });
         }
-        /// call file get help and now enter callback hell
       });
     });
   } else if (req.method === 'GET') {
     console.log ('This is a GET');
     console.log(filePath);
-    exports.readHTMLFiles(filePath, (data) => {
+    exports.readHTMLFiles(filePath, (error, data) => {
+      if (error) {
+        res.writeHead(404, helpers.headers);
+        // console.error ('Error: Can not Find File');
+        // res.write(data);
+        res.end();
+        return;
+      }
       res.writeHead(200, helpers.headers);
       res.write(data);
       res.end();
+      return;
     });
   } else {
     console.log ('Request is not a GET or POST. YOU NEED TO FIX!!\n', req.url);
+
   }
 };
 
@@ -83,10 +88,10 @@ exports.handleRequest = function (req, res) {
 exports.readHTMLFiles = function (filePath, callback) {
   fs.readFile (filePath, (error, data) => {
     if (error) {
-      console.log (error);
+      callback(error, null);
       return;
     }
-    callback(data);
+    callback(null, data);
   });
 };
 

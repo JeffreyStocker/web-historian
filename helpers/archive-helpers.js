@@ -62,7 +62,7 @@ exports.addUrlToList = function(url, callback = () =>{} ) {
   //add new url to the object w/ status 'inprogress'
   //store back to the harddrive
   var database;
-
+  console.log ('is running');
   exports.readListOfUrls(function(urls) {
     database = urls;
     exports.isUrlInList(url, function (status) {
@@ -70,14 +70,13 @@ exports.addUrlToList = function(url, callback = () =>{} ) {
         // console.log("URL:", url);
         database.push(url);
         // console.log("database:", database);
-        var filePath = process.cwd() + '/archives/sites.txt';
         // console.log("database text:", database.join('\n'));
         fs.writeFile (exports.paths.list, database.join('\n'), (error) => {
           if (error) {
-            console.error (error);
+            callback (error, false);
           }
           // console.log (url, 'saved to sites.txt');
-          callback();
+          callback(null, true);
         });
       }
     });
@@ -130,8 +129,6 @@ exports.downloadUrls = function(urls = ['one']) {
             fs.close(fd);
           });
         });
-        
-        
       });
     });
   }

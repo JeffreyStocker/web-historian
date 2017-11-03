@@ -53,7 +53,7 @@ describe('server', function() {
     });
 
     describe('POST', function () {
-      it('should append submitted sites to \'sites.txt\'', function(done) {
+      it.only('should append submitted sites to \'sites.txt\'', function(done) {
         var url = 'www.example.com';
 
         // Reset the test file and process request
@@ -80,7 +80,7 @@ describe('archive helpers', function() {
   describe('#readListOfUrls', function () {
     it('should read urls from sites.txt', function (done) {
       var urlArray = ['example1.com', 'example2.com'];
-      console.log("what:", archive.paths.list);
+      // console.log("what:", archive.paths.list);
       fs.writeFileSync(archive.paths.list, urlArray.join('\n'));
 
       archive.readListOfUrls(function(urls) {
@@ -143,7 +143,7 @@ describe('archive helpers', function() {
     });
   });
 
-  describe('#downloadUrls', function () {
+  xdescribe('#downloadUrls', function () {
     it('should download all pending urls in the list', function (done) {
       var urlArray = ['www.example.com', 'www.google.com'];
       archive.downloadUrls(urlArray);
